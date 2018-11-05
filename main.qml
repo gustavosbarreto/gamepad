@@ -4,7 +4,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Window 2.2
 import updatehub.Agent 1.0 as UpdateHub
 
-import "./qml-flappy-bird" as FlappyBird
+import "./../qml-flappy-bird" as FlappyBird
 
 Window {
     visibility: Window.FullScreen
