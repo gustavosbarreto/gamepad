@@ -41,7 +41,7 @@ Window {
         Image {
             id: bg
 
-            source: "background2.jpg"
+            source: "background.jpg"
             anchors.fill: parent
             sourceSize: Qt.size(parent.width, parent.height)
             visible: false
@@ -241,7 +241,7 @@ Window {
                 }
                 ListElement {
                     name: "Upgrade"
-                    icon: "upgrade2.png"
+                    icon: "upgrade.png"
                     type: "upgrade"
                 }
                 ListElement {
