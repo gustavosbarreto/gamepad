@@ -137,7 +137,7 @@ Window {
                             Component.onCompleted: {
                                 var info = updatehub.info();
                                 if (typeof info != "undefined") {
-                                    text = "Current version: " + info.version;
+                                    text = "Current version: " + info.firmware.version;
                                 }
                             }
                         }
