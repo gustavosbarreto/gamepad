@@ -50,7 +50,7 @@ Window {
         FastBlur {
             anchors.fill: bg
             source: bg
-            radius: 50
+            radius: 20
         }
 
         StackView {
@@ -225,7 +225,7 @@ Window {
                     Text {
                         text: model.name
                         anchors.horizontalCenter: parent.horizontalCenter
-                        font.pixelSize: 16
+                        font.pixelSize: 22
                         color: wrapper.PathView.isCurrentItem ? "#fff" : "#0C5E9C"
                     }
                 }
