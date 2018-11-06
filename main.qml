@@ -20,7 +20,7 @@ Window {
         Component.onCompleted: listen()
 
         onStateChanged: {
-            switch (state.id) {
+            switch (state.id()) {
             case UpdateHub.AgentState.Downloading:
                 currentState = "Downloading";
                 break;
@@ -30,6 +30,8 @@ Window {
             case UpdateHub.AgentState.Rebooting:
                 currentState = "Rebooting";
             }
+
+            state.done();
         }
     }
 
@@ -168,18 +170,32 @@ Window {
 
                             text: "Checking for updates..."
 
-                            Component.onCompleted: {
-                                var probe = updatehub.probe();
+                            Timer {
+                                id: timer
 
-                                if (typeof probe != "undefined") {
-                                    if (probe["update-available"]) {
-                                        text = "Update available!";
-                                    } else {
-                                        text = "No update available!";
-                                        busy.running = false;
+                                running: false
+
+                                onTriggered: {
+                                    var probe = updatehub.probe();
+
+                                    if (typeof probe != "undefined") {
+                                        if (probe["update-available"]) {
+                                            parent.text = "Update available!";
+                                        } else {
+                                            parent.text = "No update available!";
+                                            busy.running = false;
+                                        }
                                     }
                                 }
                             }
+
+                            Component.onCompleted: timer.start()
+                        }
+
+                        BusyIndicator {
+                            id: busy
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            running: true
                         }
 
                         Text {
@@ -188,12 +204,6 @@ Window {
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             text: currentState
-                        }
-
-                        BusyIndicator {
-                            id: busy
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            running: true
                         }
                     }
                 }
