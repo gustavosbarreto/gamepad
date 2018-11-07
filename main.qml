@@ -3,6 +3,7 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 1.3
 import QtQuick.Window 2.2
 import updatehub.Agent 1.0 as UpdateHub
+import OSSystems.Utils 1.0 as Utils
 
 import "./../qml-flappy-bird" as FlappyBird
 
@@ -35,6 +36,10 @@ Window {
         }
     }
 
+    Utils.Process {
+        id: process
+    }
+
     Item {
         focus: true
 
@@ -63,10 +68,17 @@ Window {
             Component.onCompleted: menu.focus = true
         }
 
-        Keys.onRightPressed: menu.incrementCurrentIndex()
-        Keys.onLeftPressed: menu.decrementCurrentIndex()
+        Keys.onRightPressed: if (!poweroff.active) menu.incrementCurrentIndex()
+        Keys.onLeftPressed: if (!poweroff.active) menu.decrementCurrentIndex()
+        Keys.onDownPressed: poweroff.active = true
+        Keys.onUpPressed: poweroff.active = false
 
         Keys.onReturnPressed: {
+            if (poweroff.active) {
+                process.start("reboot");
+                return;
+            }
+
             switch (model.get(menu.currentIndex).type) {
             case "game":
                 stack.push(game);
@@ -228,7 +240,7 @@ Window {
                         ColorOverlay {
                             anchors.fill: icon
                             source: icon
-                            color: wrapper.PathView.isCurrentItem ? "#fff" : "#0C5E9C"
+                            color: wrapper.PathView.isCurrentItem && !poweroff.active ? "#fff" : "#0C5E9C"
                         }
                     }
 
@@ -236,7 +248,7 @@ Window {
                         text: model.name
                         anchors.horizontalCenter: parent.horizontalCenter
                         font.pixelSize: 22
-                        color: wrapper.PathView.isCurrentItem ? "#fff" : "#0C5E9C"
+                        color: wrapper.PathView.isCurrentItem && !poweroff.active ? "#fff" : "#0C5E9C"
                     }
                 }
             }
@@ -282,6 +294,26 @@ Window {
                         PathQuad { x: 120*2; y: 25*2; controlX: 260*2; controlY: 75*2 }
                         PathQuad { x: 120*2; y: 180*2; controlX: -20*2; controlY: 75*2 }
                     }
+                }
+            }
+
+            Image {
+                id: poweroff
+                source: "poweroff.png"
+                width: 64
+                height: 64
+                smooth: true
+                mipmap: true
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.margins: 10
+
+                property bool active: false
+
+                ColorOverlay {
+                    anchors.fill: poweroff
+                    source: poweroff
+                    color: parent.active ? "#fff" : "#0C5E9C"
                 }
             }
         }
