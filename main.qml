@@ -76,6 +76,7 @@ Window {
         Keys.onReturnPressed: {
             if (poweroff.active) {
                 process.start("reboot");
+                stack.visible = false;
                 return;
             }
 
