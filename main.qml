@@ -65,6 +65,20 @@ Window {
             initialItem: main
             anchors.fill: parent
 
+            Behavior on opacity {
+                NumberAnimation {
+                    property: "opacity"
+                    to: 0
+                    duration: 1000
+                }
+            }
+
+            onOpacityChanged: {
+                if (opacity == 0) {
+                    process.start("reboot");
+                }
+            }
+
             Component.onCompleted: menu.focus = true
         }
 
@@ -75,8 +89,7 @@ Window {
 
         Keys.onReturnPressed: {
             if (poweroff.active) {
-                process.start("reboot");
-                stack.visible = false;
+                stack.opacity = 0;
                 return;
             }
 
