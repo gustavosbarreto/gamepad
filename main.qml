@@ -40,8 +40,9 @@ Window {
         id: process
     }
 
-    Item {
+    Rectangle {
         focus: true
+        color: "black"
 
         anchors.fill: parent
 
@@ -55,20 +56,37 @@ Window {
         }
 
         FastBlur {
+            id: bgblur
             anchors.fill: bg
             source: bg
             radius: 20
+            opacity: 0
+
+            Component.onCompleted: bgblur.opacity = 1
+
+            Behavior on opacity {
+                NumberAnimation {
+                    property: "opacity"
+                    duration: 1000
+                }
+            }
+
+            onOpacityChanged: {
+                if (opacity == 1) {
+                    stack.opacity = 1;
+                }
+            }
         }
 
         StackView {
             id: stack
             initialItem: main
             anchors.fill: parent
+            opacity: 0
 
             Behavior on opacity {
                 NumberAnimation {
                     property: "opacity"
-                    to: 0
                     duration: 1000
                 }
             }
@@ -79,7 +97,7 @@ Window {
                 }
             }
 
-            Component.onCompleted: menu.focus = true
+            Component.onCompleted: menu.focus = true;
         }
 
         Keys.onRightPressed: if (!poweroff.active) menu.incrementCurrentIndex()
@@ -89,6 +107,7 @@ Window {
 
         Keys.onReturnPressed: {
             if (poweroff.active) {
+                bgblur.opacity = 0;
                 stack.opacity = 0;
                 return;
             }
