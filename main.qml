@@ -169,6 +169,25 @@ Window {
                                 }
                             }
                         }
+
+                        Text {
+                            font.pixelSize: 20
+                            color: "#fff"
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            text: "IP Address:"
+
+                            Utils.Process {
+                                id: nmcli
+                            }
+
+                            Component.onCompleted: {
+                                nmcli.start("nmcli", "-g IP4.ADDRESS device show wlan0".split(" "));
+                                nmcli.waitForFinished(-1);
+
+                                text = "IP Address: " + nmcli.readAllStandardOutput().split("/")[0];
+                            }
+                        }
                     }
                 }
             }
