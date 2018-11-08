@@ -93,7 +93,7 @@ Window {
 
             onOpacityChanged: {
                 if (opacity == 0) {
-                    process.start("reboot");
+                    process.start("poweroff");
                 }
             }
 
